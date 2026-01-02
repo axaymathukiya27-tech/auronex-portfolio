@@ -1,34 +1,59 @@
-# Auronex Portfolio 🚀
+# 🌐 Auronex – Personal Portfolio Website
 
-A modern, full-stack personal portfolio website showcasing my projects, skills, and professional journey as a developer. Built with clean architecture, performance in mind, and production-ready structure.
-
----
-
-## 🌐 Live Preview
-> (Add your deployed link here once live)
+A modern, full-stack **personal portfolio website** built to showcase my skills, projects, and experience as a developer.  
+This project demonstrates real-world full-stack development using modern tools and best practices.
 
 ---
 
-## 🧩 Tech Stack
+## 🔗 Live Website
+
+👉 https://auronex-portfolio.vercel.app
+
+---
+
+## 👨‍💻 About Me
+
+I’m **Axay Mathukiya**, a passionate developer focused on building scalable, clean, and user-friendly web applications.  
+This portfolio showcases my skills, projects, and provides a way to contact me directly.
+
+---
+
+## 🛠 Tech Stack
 
 ### Frontend
-- React.js
-- Vite
+- React.js (Vite)
 - Tailwind CSS
-- JavaScript / TypeScript
+- JavaScript
+- Responsive UI
 
 ### Backend
 - Node.js
 - Express.js
-- REST API
+- PostgreSQL
 
-### Tools & Services
+### Services & Tools
+- Render (Backend & Database)
+- Vercel (Frontend Hosting)
+- Brevo (Email Service)
 - Git & GitHub
-- VS Code
-- Vercel (Frontend Deployment)
-- Render / Railway (Backend Deployment)
 
 ---
+
+## ✨ Features
+
+- Professional portfolio UI
+- Contact form with backend integration
+- Email notifications on form submission
+- Data stored securely in PostgreSQL
+- Clean and scalable project structure
+- Fully responsive design
+
+---
+
+## 📸 Screenshots
+
+### 🏠 Home Page
+![Home Page](./screenshots/home.png)
 
 ## 📁 Project Structure
 ```bash
@@ -39,7 +64,7 @@ auronex-portfolio/
 │ ├── db.js
 │ ├── server.js
 │ ├── package.json
-│ └── .env (ignored)
+│ └── .env
 │
 ├── frontend/
 │ ├── src/
@@ -48,74 +73,91 @@ auronex-portfolio/
 │ └── vite.config.js
 │
 ├── .gitignore
-├── .env.example
 └── README.md
 ```
 
-
 ---
 
-## ✨ Features
+## ⚙️ Setup Instructions
 
-- Clean & responsive UI
-- Portfolio projects showcase
-- Contact form with backend integration
-- Scalable folder structure
-- Secure environment variable handling
-- Fully responsive across devices
-
----
-
-## ⚙️ Setup & Installation
-
-### 1️⃣ Clone the repository
+1️⃣ Clone Repository
 ```bash
 git clone https://github.com/axaymathukiya27-tech/auronex-portfolio.git
 cd auronex-portfolio
-2️⃣ Install dependencies
-bash
-Copy code
-cd frontend
-npm install
-
-cd ../backend
-npm install
-3️⃣ Environment Variables
-Create a .env file inside the backend folder:
-
-env
-Copy code
-PORT=5000
-DATABASE_URL=your_database_url
-EMAIL_USER=your_email
-EMAIL_PASS=your_password
-4️⃣ Run the project
-bash
-Copy code
-# Backend
+```
+2️⃣ Backend Setup
+```bash
 cd backend
+npm install
+```
+
+Create .env file:
+```bash
+PORT=5000
+DATABASE_URL=your_postgres_url
+BREVO_API_KEY=your_brevo_api_key
+CONTACT_FROM_EMAIL=your_verified_email
+```
+
+Run backend:
+```bash
+npm start
+```
+
+3️⃣ Frontend Setup
+```bash
+cd ../frontend
+npm install
 npm run dev
+```
 
-# Frontend
-cd frontend
-npm run dev
-📸 Screenshots
-Add screenshots of your website here
+Visit:
+```bash
+http://localhost:5173
+```
+## 📨 Contact System Workflow
 
-🚀 Deployment
-Frontend deployed on Vercel
+1. User submits the contact form  
+2. Data is saved to the PostgreSQL database  
+3. Email notification is sent via Brevo  
+4. User receives confirmation  
 
-Backend deployed on Render / Railway
+---
 
-👨‍💻 Author
-Axay Mathukiya
-Aspiring Data Scientist
+## 📦 Database Schema
 
-📫 GitHub: https://github.com/axaymathukiya27-tech
-🌐 Portfolio: Coming Soon
+```sql
+CREATE TABLE contacts (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  subject TEXT,
+  message TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
 
-⭐ Support
-If you like this project, consider giving it a ⭐ on GitHub!
+## 🚀 Deployment
 
-📄 License
-This project is open-source and available under the MIT License.
+- **Frontend:** Vercel  
+- **Backend:** Render  
+- **Database:** Render PostgreSQL  
+
+---
+
+## 👨‍💻 Author
+
+**Axay Mathukiya**  
+Aspiring Full-Stack Developer  
+
+🔗 GitHub: https://github.com/axaymathukiya27-tech  
+🌐 Portfolio: https://auronex-portfolio.vercel.app  
+
+---
+
+## 🙌 Acknowledgements
+
+Thanks for checking out my portfolio!  
+Feel free to connect, collaborate, or provide feedback.
+
+⭐ If you like this project, consider starring the repository!
