@@ -6,48 +6,65 @@ import { sendContactEmail } from "./utils/brevoMailer.js";
 
 const app = express();
 
-// Middleware
+// ------------------ MIDDLEWARE ------------------
 app.use(express.json({ limit: "10kb" }));
 app.use(cors());
 
-// Health check
+// ------------------ HEALTH CHECK ------------------
 app.get("/", async (req, res) => {
   try {
     const result = await pool.query("SELECT NOW()");
-    res.json({ status: "Database connected", time: result.rows[0].now });
-  } catch (err) {
-    res.status(500).json({ error: "Database error" });
+    res.json({
+      status: "Backend running",
+      dbTime: result.rows[0].now,
+    });
+  } catch (error) {
+    console.error("DB health check failed:", error);
+    res.status(500).json({ error: "Database connection failed" });
   }
 });
 
-// Contact endpoint
+// ------------------ CONTACT FORM API ------------------
 app.post("/api/contact", async (req, res) => {
-  console.log("Incoming data:", req.body);
+  const { name, email, subject, message } = req.body;
+
+  // Basic validation
+  if (!name || !email || !message) {
+    return res.status(400).json({
+      error: "Name, email, and message are required",
+    });
+  }
 
   try {
-    const { name, email, subject, message } = req.body;
-
+    // 1. Save to database
     const result = await pool.query(
       `INSERT INTO contacts (name, email, subject, message)
        VALUES ($1, $2, $3, $4)
-       RETURNING *`,
+       RETURNING id`,
       [name, email, subject, message]
     );
 
-    console.log("Inserted row:", result.rows[0]);
+    console.log("✅ DB INSERTED ID:", result.rows[0].id);
 
+    // 2. Send email
     await sendContactEmail({ name, email, subject, message });
 
-    res.status(200).json({ success: true });
-  } catch (err) {
-    console.error("DB ERROR:", err);
-    res.status(500).json({ error: "Database insert failed" });
+    // 3. Success response
+    res.status(200).json({
+      success: true,
+      message: "Message sent successfully",
+    });
+
+  } catch (error) {
+    console.error("❌ ERROR:", error);
+    res.status(500).json({
+      error: "Something went wrong while sending message",
+    });
   }
 });
 
-
-// 🚀 START SERVER (THIS WAS MISSING)
+// ------------------ START SERVER ------------------
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
