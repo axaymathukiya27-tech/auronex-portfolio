@@ -6,6 +6,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import SectionHeading from "@/components/SectionHeading";
 
+const API_URL =
+  import.meta.env.VITE_API_URL?.trim() ||
+  "https://auronex-backend.onrender.com";
+
 const contactInfo = [
   {
     icon: Mail,
@@ -60,47 +64,58 @@ const Contact = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
+    setIsSubmitting(true);
 
-  try {
-    const res = await fetch( `${import.meta.env.VITE_API_URL}/api/contact`,{
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: formData.name,
-        email: formData.email,
-        subject: formData.subject,
-        message: formData.message,
-      }),
-    });
+    try {
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000); // 10 sec timeout
 
-    const data = await res.json();
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+        signal: controller.signal,
+      });
 
-    if (!res.ok) {
-      throw new Error(data.error || "Something went wrong");
+      clearTimeout(timeout);
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Server error");
+      }
+
+      toast({
+        title: "Message sent successfully!",
+        description: "I’ll get back to you soon.",
+      });
+
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error) {
+      console.error("Contact error:", error);
+      toast({
+        title: "Failed to send message",
+        description:
+          "Server is not responding. Please try again in a few seconds.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-    toast({
-      title: "Message sent!",
-      description: "Thanks for reaching out. I'll get back to you soon.",
-    });
-
-    setFormData({
-      name: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: "Failed to send message. Try again later.",
-      variant: "destructive",
-    });
-  }
-};
-
+  };
 
   return (
     <main className="min-h-screen pt-24">
