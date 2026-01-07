@@ -1,5 +1,6 @@
 import { ExternalLink, Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { ReactNode } from "react";
 
 interface ProjectCardProps {
   title: string;
@@ -7,7 +8,7 @@ interface ProjectCardProps {
   techStack: string[];
   liveUrl?: string;
   githubUrl?: string;
-  image?: string;
+  icon: ReactNode;
 }
 
 const ProjectCard = ({
@@ -16,29 +17,33 @@ const ProjectCard = ({
   techStack,
   liveUrl,
   githubUrl,
+  icon,
 }: ProjectCardProps) => {
   return (
-    <div className="group glass rounded-2xl p-6 hover:border-primary/30 transition-all duration-500 hover:shadow-elevated hover:-translate-y-1">
-      <div className="flex flex-col h-full">
-        <div className="mb-4">
-          <div className="w-12 h-12 rounded-xl bg-gradient-primary flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-            <span className="text-xl font-bold text-primary-foreground">
-              {title.charAt(0)}
-            </span>
-          </div>
-          <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
-            {title}
-          </h3>
-          <p className="text-muted-foreground text-sm leading-relaxed">
-            {description}
-          </p>
+    <div className="group relative glass rounded-2xl p-6 border border-white/5 hover:border-primary/40 transition-all duration-500 hover:shadow-[0_0_40px_-10px_rgba(56,189,248,0.4)] hover:-translate-y-1 overflow-hidden">
+      
+      {/* Glow effect */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none bg-gradient-to-br from-primary/10 via-transparent to-purple-500/10" />
+
+      <div className="relative flex flex-col h-full">
+        {/* Icon */}
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center mb-4 text-black shadow-lg group-hover:scale-110 transition-transform duration-300">
+          {icon}
         </div>
+
+        <h3 className="text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors duration-300">
+          {title}
+        </h3>
+
+        <p className="text-muted-foreground text-sm leading-relaxed mb-4">
+          {description}
+        </p>
 
         <div className="flex flex-wrap gap-2 mb-6">
           {techStack.map((tech) => (
             <span
               key={tech}
-              className="px-3 py-1 text-xs font-medium rounded-full bg-secondary text-muted-foreground"
+              className="px-3 py-1 text-xs font-medium rounded-full bg-secondary/70 text-muted-foreground backdrop-blur"
             >
               {tech}
             </span>
@@ -54,6 +59,7 @@ const ProjectCard = ({
               </a>
             </Button>
           )}
+
           {githubUrl && (
             <Button variant="glass" size="sm" asChild className="flex-1">
               <a href={githubUrl} target="_blank" rel="noopener noreferrer">
